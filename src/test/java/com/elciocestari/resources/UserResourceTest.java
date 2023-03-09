@@ -1,4 +1,4 @@
-package com.elciocestari;
+package com.elciocestari.resources;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
