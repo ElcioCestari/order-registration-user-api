@@ -1,15 +1,19 @@
 package com.elciocestari.services;
 
 import com.elciocestari.entities.User;
+import com.elciocestari.repositories.UserRepository;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
 public class UserService {
 
+    @Inject
+    UserRepository repository;
+
     public List<User> findAll() {
-        return List.of(new User("username_fake_1", "password_fake_1"),
-                new User("username_fake_2", "password_fake_2"));
+        return repository.listAll();
     }
 }
