@@ -5,7 +5,10 @@ import com.elciocestari.dtos.UserResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -51,6 +54,21 @@ class UserResourceTest {
 
     @Test
     @Order(3)
+    @SneakyThrows
+    void update() {
+        var dto = new UserRequestDTO(userResponseDTO.getUsername(), "new_pass");
+        given()
+                .contentType(JSON)
+                .body(new ObjectMapper().writeValueAsString(dto))
+                .when().put("/users/" + userResponseDTO.getUsername())
+                .then()
+                .statusCode(OK)
+                .body("$", not(hasKey("password")))
+                .body("$", not(hasValue(dto.getPassword())));
+    }
+
+    @Test
+    @Order(4)
     @SneakyThrows
     void delete() {
         given()

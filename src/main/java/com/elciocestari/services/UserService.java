@@ -4,6 +4,7 @@ import com.elciocestari.dtos.UserRequestDTO;
 import com.elciocestari.dtos.UserResponseDTO;
 import com.elciocestari.mappers.UserMapper;
 import com.elciocestari.repositories.UserRepository;
+import org.jboss.resteasy.reactive.common.NotImplementedYet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,5 +32,9 @@ public class UserService {
         repository.findByUsername(username)
                 .forEach(repository::delete);
         return null;
+    }
+
+    public UserResponseDTO update(String username, UserRequestDTO dto) {
+        throw new NotImplementedYet();
     }
 }
