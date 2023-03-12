@@ -11,6 +11,9 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.status;
 
 @Path("/users")
 @Produces(APPLICATION_JSON)
@@ -19,6 +22,7 @@ public class UserResource {
 
     @Inject
     UserService service;
+
     @GET
     public List<UserResponseDTO> users() {
         return service.findAll();
@@ -26,6 +30,12 @@ public class UserResource {
 
     @POST
     public Response save(UserRequestDTO dto) {
-        return Response.status(201).entity(service.save(dto)).build();
+        return status(CREATED).entity(service.save(dto)).build();
+    }
+
+    @DELETE
+    @Path("/{username}")
+    public Response delete(@PathParam("username") String username) {
+        return status(NO_CONTENT).entity(service.delete(username)).build();
     }
 }

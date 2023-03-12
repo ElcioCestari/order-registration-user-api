@@ -26,4 +26,10 @@ public class UserService {
         repository.persist(user);
         return mapper.map(user);
     }
+
+    public Void delete(String username) {
+        repository.findByUsername(username)
+                .forEach(repository::delete);
+        return null;
+    }
 }

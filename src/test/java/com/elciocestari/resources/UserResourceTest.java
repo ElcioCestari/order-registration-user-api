@@ -1,23 +1,28 @@
 package com.elciocestari.resources;
 
 import com.elciocestari.dtos.UserRequestDTO;
+import com.elciocestari.dtos.UserResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.*;
-import static org.jboss.resteasy.reactive.RestResponse.StatusCode.CREATED;
-import static org.jboss.resteasy.reactive.RestResponse.StatusCode.OK;
+import static org.jboss.resteasy.reactive.RestResponse.StatusCode.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserResourceTest {
 
+    private static UserResponseDTO userResponseDTO;
+
     @Test
+    @Order(1)
     void users() {
         given()
                 .when().get("/users")
@@ -28,10 +33,11 @@ class UserResourceTest {
     }
 
     @Test
+    @Order(2)
     @SneakyThrows
     void save() {
         var dto = new UserRequestDTO("elcio", "elcio_pass");
-        given()
+        userResponseDTO = given()
                 .contentType(JSON)
                 .body(new ObjectMapper().writeValueAsString(dto))
                 .when().post("/users")
@@ -39,7 +45,19 @@ class UserResourceTest {
                 .statusCode(CREATED)
                 .body("$", not(hasKey("password")))
                 .body("$", not(hasValue(dto.getPassword())))
-                .body("username", is(dto.getUsername()));
+                .body("username", is(dto.getUsername())).extract().body().as(UserResponseDTO.class);
+        assertNotNull(userResponseDTO);
+    }
+
+    @Test
+    @Order(3)
+    @SneakyThrows
+    void delete() {
+        given()
+                .contentType(JSON)
+                .when().delete("/users/" + userResponseDTO.getUsername())
+                .then()
+                .statusCode(NO_CONTENT);
     }
 
 }
