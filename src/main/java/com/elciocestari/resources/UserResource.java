@@ -1,13 +1,12 @@
 package com.elciocestari.resources;
 
+import com.elciocestari.dtos.UserRequestDTO;
 import com.elciocestari.entities.User;
 import com.elciocestari.services.UserService;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 import java.util.List;
 
@@ -23,5 +22,10 @@ public class UserResource {
     @GET
     public List<User> users() {
         return service.findAll();
+    }
+
+    @POST
+    public Response save(UserRequestDTO dto) {
+        return Response.status(201).entity(service.save(dto)).build();
     }
 }
