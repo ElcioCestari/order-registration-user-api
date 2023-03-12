@@ -2,7 +2,6 @@ package com.elciocestari.services;
 
 import com.elciocestari.dtos.UserRequestDTO;
 import com.elciocestari.dtos.UserResponseDTO;
-import com.elciocestari.entities.User;
 import com.elciocestari.mappers.UserMapper;
 import com.elciocestari.repositories.UserRepository;
 
@@ -19,13 +18,12 @@ public class UserService {
     UserRepository repository;
 
     public List<UserResponseDTO> findAll() {
-        List<User> users = repository.listAll();
-        return mapper.map(users);
+        return mapper.map(repository.listAll());
     }
 
     public UserResponseDTO save(UserRequestDTO dto) {
-        User user = mapper.map(dto);
+        var user = mapper.map(dto);
         repository.persist(user);
-        return new UserResponseDTO(user.getUsername());
+        return mapper.map(user);
     }
 }
