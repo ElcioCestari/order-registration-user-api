@@ -16,6 +16,7 @@
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>2.16.4.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
+    <map.struct.version>1.5.1.Final</map.struct.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -63,7 +64,13 @@
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
-      <version>1.5.1.Final</version>
+      <version>${map.struct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <version>${map.struct.version}</version>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>

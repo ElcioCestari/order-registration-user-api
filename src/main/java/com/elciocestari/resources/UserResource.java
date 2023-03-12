@@ -1,7 +1,7 @@
 package com.elciocestari.resources;
 
 import com.elciocestari.dtos.UserRequestDTO;
-import com.elciocestari.entities.User;
+import com.elciocestari.dtos.UserResponseDTO;
 import com.elciocestari.services.UserService;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ public class UserResource {
     @Inject
     UserService service;
     @GET
-    public List<User> users() {
+    public List<UserResponseDTO> users() {
         return service.findAll();
     }
 
