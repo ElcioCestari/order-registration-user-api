@@ -72,7 +72,6 @@
       <version>${map.struct.version}</version>
       <scope>provided</scope>
     </dependency>
-
   </dependencies>
   <build>
     <plugins>

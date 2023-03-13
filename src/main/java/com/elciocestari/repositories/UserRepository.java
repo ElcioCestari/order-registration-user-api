@@ -5,11 +5,16 @@ import io.quarkus.mongodb.panache.PanacheMongoRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class UserRepository implements PanacheMongoRepository<User> {
-    //TODO - replace in the future to be only one User.
-    public List<User> findByUsername(String username) {
-        return find("{'username': ?1}", username).list();
+
+    public Optional<User> findByUsername(String username) {
+        List<User> list = find("{'username': ?1}", username).list();
+        if (list.size() > 1) {
+            throw new RuntimeException("More then one row allowed returned");
+        }
+        return Optional.ofNullable(list.get(0));
     }
 }
