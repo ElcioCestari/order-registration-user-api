@@ -2,6 +2,7 @@ package com.elciocestari.resources;
 
 import com.elciocestari.dtos.UserRequestDTO;
 import com.elciocestari.dtos.UserResponseDTO;
+import com.elciocestari.dtos.UserUpdateRequestDTO;
 import com.elciocestari.services.UserService;
 
 import javax.inject.Inject;
@@ -34,7 +35,7 @@ public class UserResource {
 
     @PUT
     @Path("/{username}")
-    public Response save(@PathParam("username") String username, UserRequestDTO dto) {
+    public Response save(@PathParam("username") String username, UserUpdateRequestDTO dto) {
         return status(OK).entity(service.update(username, dto)).build();
     }
 

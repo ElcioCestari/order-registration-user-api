@@ -78,4 +78,28 @@ class UserResourceTest {
                 .statusCode(NO_CONTENT);
     }
 
+    @Test
+    @Order(5)
+    @SneakyThrows
+    void save_whenAlreadyExistsAnUser_thenThrowException() {
+        var dto = new UserRequestDTO("elcio", "elcio_pass");
+        userResponseDTO = given()
+                .contentType(JSON)
+                .body(new ObjectMapper().writeValueAsString(dto))
+                .when().post("/users")
+                .then()
+                .extract().body().as(UserResponseDTO.class);
+        assertNotNull(userResponseDTO);
+
+        given()
+                .contentType(JSON)
+                .body(new ObjectMapper().writeValueAsString(new UserRequestDTO(dto.getUsername(), dto.getPassword())))
+                .when().post("/users")
+                .then()
+                .statusCode(BAD_REQUEST)
+                .log()
+                .ifError();
+
+    }
+
 }

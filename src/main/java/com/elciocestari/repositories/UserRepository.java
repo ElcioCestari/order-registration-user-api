@@ -7,6 +7,8 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+
 @ApplicationScoped
 public class UserRepository implements PanacheMongoRepository<User> {
 
@@ -15,6 +17,6 @@ public class UserRepository implements PanacheMongoRepository<User> {
         if (list.size() > 1) {
             throw new RuntimeException("More then one row allowed returned");
         }
-        return Optional.ofNullable(list.get(0));
+        return ofNullable(list.isEmpty() ? null : list.get(0));
     }
 }
