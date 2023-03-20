@@ -33,6 +33,12 @@ public class UserResource {
         return status(CREATED).entity(service.save(dto)).build();
     }
 
+    @GET
+    @Path("/{username}")
+    public Response findOne(@PathParam("username") String username) {
+        return status(OK).entity(service.findOne(username)).build();
+    }
+
     @PUT
     @Path("/{username}")
     public Response save(@PathParam("username") String username, UserUpdateRequestDTO dto) {

@@ -8,6 +8,7 @@ import com.elciocestari.repositories.UserRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class UserService {
     public UserResponseDTO save(UserRequestDTO dto) {
         repository.findByUsername(dto.getUsername())
                 .ifPresent(user -> {
-                    throw new RuntimeException("user already exists");
+                    throw new BadRequestException("user ["+user.getUsername()+"] already exists");
                 });
         var user = mapper.map(dto);
         repository.persist(user);
@@ -44,6 +45,12 @@ public class UserService {
     public UserResponseDTO update(String username, UserUpdateRequestDTO dto) {
         return repository.findByUsername(username)
                 .map(user -> mapper.merge(dto, user))
+                .map(user -> mapper.map(user))
+                .orElseThrow(NotFoundException::new);
+    }
+
+    public UserResponseDTO findOne(String username) {
+        return repository.findByUsername(username)
                 .map(user -> mapper.map(user))
                 .orElseThrow(NotFoundException::new);
     }

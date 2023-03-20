@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.*;
@@ -39,7 +40,7 @@ class UserResourceTest {
     @Order(2)
     @SneakyThrows
     void save() {
-        var dto = new UserRequestDTO("elcio", "elcio_pass");
+        var dto = new UserRequestDTO(random(12), random(12));
         userResponseDTO = given()
                 .contentType(JSON)
                 .body(new ObjectMapper().writeValueAsString(dto))
@@ -55,6 +56,19 @@ class UserResourceTest {
     @Test
     @Order(3)
     @SneakyThrows
+    void findOne() {
+        given()
+                .contentType(JSON)
+                .when().get("/users/" + userResponseDTO.getUsername())
+                .then()
+                .statusCode(OK)
+                .body("$", not(hasKey("password")));
+    }
+
+
+    @Test
+    @Order(4)
+    @SneakyThrows
     void update() {
         var dto = new UserRequestDTO(userResponseDTO.getUsername(), "new_pass");
         given()
@@ -68,7 +82,7 @@ class UserResourceTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     @SneakyThrows
     void delete() {
         given()
@@ -79,10 +93,10 @@ class UserResourceTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @SneakyThrows
     void save_whenAlreadyExistsAnUser_thenThrowException() {
-        var dto = new UserRequestDTO("elcio", "elcio_pass");
+        var dto = new UserRequestDTO(random(12), random(12));
         userResponseDTO = given()
                 .contentType(JSON)
                 .body(new ObjectMapper().writeValueAsString(dto))
@@ -96,10 +110,13 @@ class UserResourceTest {
                 .body(new ObjectMapper().writeValueAsString(new UserRequestDTO(dto.getUsername(), dto.getPassword())))
                 .when().post("/users")
                 .then()
-                .statusCode(BAD_REQUEST)
-                .log()
-                .ifError();
+                .statusCode(BAD_REQUEST);
 
+        given()
+                .contentType(JSON)
+                .when().delete("/users/" + userResponseDTO.getUsername())
+                .then()
+                .statusCode(NO_CONTENT);
     }
 
 }
